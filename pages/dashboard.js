@@ -1,4 +1,33 @@
+'use client';
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+// Registrando os componentes necessários do Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+// Importando o componente Line dinamicamente para evitar erros de SSR
+const Line = dynamic(
+  () => import('react-chartjs-2').then(mod => mod.Line),
+  { ssr: false }
+);
 
 export default function Dashboard() {
   // Dados mockados para exemplo
@@ -7,6 +36,46 @@ export default function Dashboard() {
     completedWorkouts: 48,
     streak: 7,
     level: 15
+  };
+
+  const weightData = {
+    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+    datasets: [
+      {
+        label: 'Peso (kg)',
+        data: [85, 83, 82, 80, 79, 78],
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+        tension: 0.3,
+      },
+    ],
+  };
+
+  const strengthData = {
+    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+    datasets: [
+      {
+        label: 'Carga Total (kg)',
+        data: [2000, 2200, 2400, 2600, 2800, 3000],
+        borderColor: 'rgb(34, 197, 94)',
+        backgroundColor: 'rgba(34, 197, 94, 0.5)',
+        tension: 0.3,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+    },
   };
 
   const rankings = {
